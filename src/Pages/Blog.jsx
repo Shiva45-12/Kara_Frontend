@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
-import AdminLoader from '../components/AdminLoader';
+import AdminLoader from '../Components/AdminLoader';
 
 const Blog = () => {
   useEffect(() => {
