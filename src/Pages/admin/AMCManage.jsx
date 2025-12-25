@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import Swal from 'sweetalert2';
 import { Settings, Mail, Phone, MapPin, Zap, Calendar, Search, Trash2, Eye, RefreshCw, User, Clock } from 'lucide-react';
-import AdminLoader from '../../components/AdminLoader';
-import AdminPagination from '../../components/AdminPagination';
+import AdminLoader from '../../Components/AdminLoader';
+import AdminPagination from '../../Components/AdminPagination';
 
 const AMCManage = () => {
   const [amcRequests, setAmcRequests] = useState([]);

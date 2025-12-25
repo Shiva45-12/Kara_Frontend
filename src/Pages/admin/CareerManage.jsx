@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import axios from "../../../axiosInstance";
 import { toast } from "react-toastify";
-import AdminLoader from '../../components/AdminLoader';
+import AdminLoader from '../../Components/AdminLoader';
 
 function CareerManage() {
   const [applications, setApplications] = useState([]);

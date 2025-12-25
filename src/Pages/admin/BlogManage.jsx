@@ -3,7 +3,7 @@ import {
   Plus, Edit, Trash2, Eye, Calendar, FileText, BookOpen,
   Globe, Star, RefreshCw, X, Image, Tag, Type, AlignLeft, Save
 } from 'lucide-react';
-import AdminLoader from '../../components/AdminLoader';
+import AdminLoader from '../../Components/AdminLoader';
 import axiosInstance from '../../utils/axiosInstance';
 import Swal from 'sweetalert2';
 

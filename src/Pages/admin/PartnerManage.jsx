@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import Swal from 'sweetalert2';
 import { Users, Mail, Phone, MapPin, Building2, Briefcase, Calendar, Search, Trash2, Eye, RefreshCw, User, Target } from 'lucide-react';
-import AdminLoader from '../../components/AdminLoader';
-import AdminPagination from '../../components/AdminPagination';
+import AdminLoader from '../../Components/AdminLoader';
+import AdminPagination from '../../Components/AdminPagination';
 
 const PartnerManage = () => {
   const [partners, setPartners] = useState([]);

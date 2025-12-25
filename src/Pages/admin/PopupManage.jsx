@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import Swal from 'sweetalert2';
 import { Eye, Mail, Phone, MapPin, Target, Calendar, Search, Trash2, RefreshCw, User, Globe } from 'lucide-react';
-import AdminLoader from '../../components/AdminLoader';
-import AdminPagination from '../../components/AdminPagination';
+import AdminLoader from '../../Components/AdminLoader';
+import AdminPagination from '../../Components/AdminPagination';
 
 const PopupManage = () => {
   const [popupSubmissions, setPopupSubmissions] = useState([]);
