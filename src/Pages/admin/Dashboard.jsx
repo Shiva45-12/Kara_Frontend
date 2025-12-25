@@ -1,14 +1,48 @@
-import { FileText, Briefcase, Eye, Activity, Plus, Users, BarChart3, Settings, RefreshCw } from "lucide-react";
+import { FileText, Briefcase, Eye, Activity, Plus, Users, BarChart3, Settings, RefreshCw, Mail, UserCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axiosInstance from "../../utils/axiosInstance";
 
 const Dashboard = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [stats, setStats] = useState({
+    contacts: 0,
+    amcRequests: 0,
+    partners: 0,
+    popups: 0,
+    blogs: 0
+  });
 
-  const handleRefresh = () => {
+  const fetchStats = async () => {
+    try {
+      const [contactsRes, amcRes, partnersRes, popupsRes, blogsRes] = await Promise.all([
+        axiosInstance.get('/api/contact'),
+        axiosInstance.get('/api/amc'),
+        axiosInstance.get('/api/partners'),
+        axiosInstance.get('/api/popup'),
+        axiosInstance.get('/api/blogs/admin/all')
+      ]);
+
+      setStats({
+        contacts: contactsRes.data.success ? contactsRes.data.count : 0,
+        amcRequests: amcRes.data.success ? amcRes.data.count : 0,
+        partners: partnersRes.data.success ? partnersRes.data.count : 0,
+        popups: popupsRes.data.success ? popupsRes.data.count : 0,
+        blogs: blogsRes.data.success ? blogsRes.data.data.length : 0
+      });
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Simulate data refresh
+    await fetchStats();
     setTimeout(() => {
       setIsRefreshing(false);
       setLastUpdated(new Date());
@@ -29,7 +63,7 @@ const Dashboard = () => {
           onClick={handleRefresh}
           disabled={isRefreshing}
         >
-          <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+          <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />&nbsp;&nbsp;
           <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
         </button>
       </div>
@@ -39,33 +73,34 @@ const Dashboard = () => {
         <StatCard 
           icon={<FileText size={16} />} 
           title="Blog Posts" 
-          value="12" 
-          trend="+3 this month" 
+          value={stats.blogs.toString()} 
+          trend="Content management" 
           color="blue"
           link="/admin/blogs"
         />
         <StatCard 
-          icon={<Briefcase size={16} />} 
-          title="Applications" 
-          value="8" 
-          trend="+2 new today" 
+          icon={<Mail size={16} />} 
+          title="Contact Messages" 
+          value={stats.contacts.toString()} 
+          trend="Customer inquiries" 
           color="green"
-          link="/admin/careers"
-        />
-        <StatCard 
-          icon={<Users size={16} />} 
-          title="Contacts" 
-          value="24" 
-          trend="+5 this week" 
-          color="purple"
           link="/admin/contactus"
         />
         <StatCard 
-          icon={<Activity size={16} />} 
-          title="Views" 
-          value="1,247" 
-          trend="+15% month" 
+          icon={<Settings size={16} />} 
+          title="AMC Requests" 
+          value={stats.amcRequests.toString()} 
+          trend="Maintenance contracts" 
+          color="purple"
+          link="/admin/amc"
+        />
+        <StatCard 
+          icon={<UserCheck size={16} />} 
+          title="Partner Requests" 
+          value={stats.partners.toString()} 
+          trend="Partnership applications" 
           color="orange"
+          link="/admin/partners"
         />
       </div>
 
@@ -81,58 +116,59 @@ const Dashboard = () => {
             link="/admin/blogs"
           />
           <ActionCard 
-            icon={<Briefcase size={20} />}
-            title="Career Forms" 
-            description="Review job applications"
+            icon={<Mail size={20} />}
+            title="Contact Messages" 
+            description="Review customer inquiries and messages"
             color="green"
-            link="/admin/careers"
-          />
-          <ActionCard 
-            icon={<Users size={20} />}
-            title="Contact Forms" 
-            description="Manage customer inquiries"
-            color="purple"
             link="/admin/contactus"
           />
           <ActionCard 
-            icon={<BarChart3 size={20} />}
-            title="Analytics" 
-            description="View website statistics"
+            icon={<Settings size={20} />}
+            title="AMC Requests" 
+            description="Manage maintenance contract requests"
+            color="purple"
+            link="/admin/amc"
+          />
+          <ActionCard 
+            icon={<UserCheck size={20} />}
+            title="Partner Applications" 
+            description="Review partnership applications"
             color="orange"
+            link="/admin/partners"
           />
         </div>
       </div>
 
       {/* Recent Activity Stats */}
       <div className="recent-activity-stats">
-        <h2 className="section-title">Recent Activity Overview</h2>
+        <h2 className="section-title">System Overview</h2>
         <div className="activity-stats-grid">
           <ActivityStatCard 
             icon={<FileText size={20} />}
             title="Blog Posts"
-            value="3"
-            description="Published this week"
+            value={stats.blogs.toString()}
+            description="Total published content"
             color="blue"
           />
           <ActivityStatCard 
-            icon={<Users size={20} />}
-            title="New Contacts"
-            value="12"
-            description="Messages received"
+            icon={<Mail size={20} />}
+            title="Contact Messages"
+            value={stats.contacts.toString()}
+            description="Customer inquiries received"
             color="green"
           />
           <ActivityStatCard 
-            icon={<Briefcase size={20} />}
-            title="Applications"
-            value="5"
-            description="Job submissions"
+            icon={<Settings size={20} />}
+            title="AMC Requests"
+            value={stats.amcRequests.toString()}
+            description="Maintenance contracts"
             color="purple"
           />
           <ActivityStatCard 
-            icon={<Activity size={20} />}
-            title="Total Activity"
-            value="20"
-            description="Actions today"
+            icon={<UserCheck size={20} />}
+            title="Partner Applications"
+            value={stats.partners.toString()}
+            description="Partnership requests"
             color="orange"
           />
         </div>

@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Eye, Calendar, Search, FileText, BookOpen, Globe, Star, RefreshCw, X, Image, Tag, Clock, Save, Upload, Palette, Type, AlignLeft } from 'lucide-react';
+import {
+  Plus, Edit, Trash2, Eye, Calendar, FileText, BookOpen,
+  Globe, Star, RefreshCw, X, Image, Tag, Type, AlignLeft, Save
+} from 'lucide-react';
+import AdminLoader from '../../components/AdminLoader';
+import axiosInstance from '../../utils/axiosInstance';
+import Swal from 'sweetalert2';
 
 const BlogManage = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [editingBlog, setEditingBlog] = useState(null);
+  const [selectedBlog, setSelectedBlog] = useState(null);
+
   const [formData, setFormData] = useState({
     title: '',
     excerpt: '',
@@ -17,260 +27,169 @@ const BlogManage = () => {
     image: ''
   });
 
-  // Mock data for now
   useEffect(() => {
     fetchBlogs();
   }, []);
 
-  const fetchBlogs = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setBlogs([
-        {
-          _id: '1',
-          title: 'Solar Energy Benefits for Industries',
-          excerpt: 'Discover how solar energy can reduce costs and improve sustainability in industrial operations.',
-          category: 'Sustainability',
-          status: 'published',
-          featured: true,
-          views: 1250,
-          comments: 15,
-          publishedAt: new Date(),
-          author: { name: 'Admin' },
-          image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800'
-        },
-        {
-          _id: '2', 
-          title: 'Modern Construction Techniques',
-          excerpt: 'Exploring the latest innovations in construction technology and methodologies.',
-          category: 'Construction',
-          status: 'draft',
-          featured: false,
-          views: 890,
-          comments: 8,
-          publishedAt: new Date(),
-          author: { name: 'Admin' },
-          image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800'
-        },
-        {
-          _id: '3',
-          title: 'Safety Standards in Engineering',
-          excerpt: 'Understanding the importance of safety protocols in engineering projects.',
-          category: 'Safety Standards',
-          status: 'published',
-          featured: false,
-          views: 2100,
-          comments: 23,
-          publishedAt: new Date(),
-          author: { name: 'Admin' },
-          image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800'
-        }
-      ]);
-      setLoading(false);
-      setIsRefreshing(false);
-    }, 1000);
+  const handleEdit = (blog) => {
+    setEditingBlog(blog);
+    setFormData({
+      title: blog.title,
+      excerpt: blog.excerpt,
+      content: blog.content,
+      category: blog.category,
+      featured: blog.featured,
+      status: blog.status,
+      image: blog.image
+    });
+    setShowEditModal(true);
   };
 
-  const handleRefresh = () => {
-    setIsRefreshing(true);
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axiosInstance.put(`/api/blogs/admin/${editingBlog._id}`, formData);
+      if (res.data.success) {
+        Swal.fire('Success!', 'Blog updated successfully!', 'success');
+        setShowEditModal(false);
+        fetchBlogs();
+      }
+    } catch (error) {
+      Swal.fire('Error!', 'Failed to update blog', 'error');
+    }
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axiosInstance.post('/api/blogs/admin', formData);
+      if (res.data.success) {
+        Swal.fire('Success!', 'Blog created successfully!', 'success');
+        setShowModal(false);
+        setFormData({
+          title: '',
+          excerpt: '',
+          content: '',
+          category: '',
+          featured: false,
+          status: 'draft',
+          image: ''
+        });
+        fetchBlogs();
+      }
+    } catch (error) {
+      Swal.fire('Error!', 'Failed to create blog', 'error');
+    }
+  };
+
+  const fetchBlogs = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosInstance.get('/api/blogs/admin/all');
+      if (res.data.success) setBlogs(res.data.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Delete Blog?',
+      text: 'This action cannot be undone',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444'
+    });
+    if (!result.isConfirmed) return;
+
+    await axiosInstance.delete(`/api/blogs/admin/${id}`);
     fetchBlogs();
   };
 
+  /* ================= STATS (UNCHANGED) ================= */
   const stats = {
     total: blogs.length,
-    published: blogs.filter(blog => blog.status === 'published').length,
-    drafts: blogs.filter(blog => blog.status === 'draft').length,
-    featured: blogs.filter(blog => blog.featured).length,
-    totalViews: blogs.reduce((sum, blog) => sum + blog.views, 0),
-    totalComments: blogs.reduce((sum, blog) => sum + blog.comments, 0),
-    avgViews: blogs.length > 0 ? Math.round(blogs.reduce((sum, blog) => sum + blog.views, 0) / blogs.length) : 0,
-    publishedThisMonth: blogs.filter(blog => {
-      const blogDate = new Date(blog.publishedAt);
-      const now = new Date();
-      return blog.status === 'published' && 
-             blogDate.getMonth() === now.getMonth() && 
-             blogDate.getFullYear() === now.getFullYear();
-    }).length
+    published: blogs.filter(b => b.status === 'published').length,
+    drafts: blogs.filter(b => b.status === 'draft').length,
+    featured: blogs.filter(b => b.featured).length
   };
 
-  const filteredBlogs = blogs.filter(blog => 
-    blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add new blog logic here
-    console.log('New blog data:', formData);
-    setShowModal(false);
-    setFormData({
-      title: '',
-      excerpt: '',
-      content: '',
-      category: '',
-      featured: false,
-      status: 'draft',
-      image: ''
-    });
-  };
-
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <div className="text-center py-12">
-          <RefreshCw className="w-12 h-12 text-green-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading blogs...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <AdminLoader message="Loading blog posts..." />;
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
+
+      {/* HEADER */}
       <div className="dashboard-header">
         <div>
           <h1 className="dashboard-title">Blog Management</h1>
-          <p className="dashboard-subtitle">
-            Create, edit, and manage your blog content
-          </p>
+          <p className="dashboard-subtitle">Create, edit, and manage your blog content</p>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button 
+        <div style={{display:"flex" , gap:"5px"}}>
+          <button
             className={`btn-secondary ${isRefreshing ? 'opacity-75' : ''}`}
-            onClick={handleRefresh}
-            disabled={isRefreshing}
+            onClick={() => {
+              setIsRefreshing(true);
+              fetchBlogs();
+            }}
           >
-            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} /> Refresh
           </button>
           <button className="btn-primary" onClick={() => setShowModal(true)}>
-            <Plus size={16} />
-            <span>New Post</span>
+            <Plus size={16} /> New Post
           </button>
         </div>
       </div>
 
-      {/* Enhanced Stats Grid */}
+      {/* STATS GRID (SAME) */}
       <div className="stats-grid-compact">
-        <StatCard 
-          icon={<FileText size={16} />} 
-          title="Total Posts" 
-          value={stats.total}
-          trend={`${stats.publishedThisMonth} this month`}
-          color="blue"
-        />
-        <StatCard 
-          icon={<Globe size={16} />} 
-          title="Published" 
-          value={stats.published}
-          trend={`${Math.round((stats.published/stats.total)*100) || 0}% of total`}
-          color="green"
-        />
-        <StatCard 
-          icon={<BookOpen size={16} />} 
-          title="Drafts" 
-          value={stats.drafts}
-          trend={stats.drafts > 0 ? 'Ready to publish' : 'All published'}
-          color="yellow"
-        />
-        <StatCard 
-          icon={<Star size={16} />} 
-          title="Featured" 
-          value={stats.featured}
-          trend={`${Math.round((stats.featured/stats.total)*100) || 0}% featured`}
-          color="purple"
-        />
+        <StatCard icon={<FileText size={16} />} title="Total Posts" value={stats.total} />
+        <StatCard icon={<Globe size={16} />} title="Published" value={stats.published} />
+        <StatCard icon={<BookOpen size={16} />} title="Drafts" value={stats.drafts} />
+        <StatCard icon={<Star size={16} />} title="Featured" value={stats.featured} />
       </div>
 
-      {/* Additional Stats Row */}
-      <div className="stats-grid-compact mt-4">
-        <StatCard 
-          icon={<Eye size={16} />} 
-          title="Total Views" 
-          value={stats.totalViews.toLocaleString()}
-          trend={`${stats.avgViews} avg per post`}
-          color="orange"
-        />
-        <StatCard 
-          icon={<Globe size={16} />} 
-          title="Comments" 
-          value={stats.totalComments}
-          trend={`${(stats.totalComments/stats.published || 0).toFixed(1)} per published`}
-          color="indigo"
-        />
-        <StatCard 
-          icon={<Calendar size={16} />} 
-          title="This Month" 
-          value={stats.publishedThisMonth}
-          trend={stats.publishedThisMonth > 0 ? 'Active publishing' : 'No posts yet'}
-          color="teal"
-        />
-        <StatCard 
-          icon={<RefreshCw size={16} />} 
-          title="Engagement" 
-          value={`${((stats.totalComments/stats.totalViews)*100 || 0).toFixed(1)}%`}
-          trend="Comment rate"
-          color="pink"
-        />
-      </div>
-
-      {/* Blog Posts Section */}
-      <div className="section-title">Blog Posts ({blogs.length})</div>
-
-      {/* Blog Grid with Images */}
+      {/* BLOG GRID */}
       <div className="blog-grid-dashboard">
-        {blogs.map((blog) => (
-          <BlogCard key={blog._id} blog={blog} />
+        {blogs.map(blog => (
+          <BlogCard
+            key={blog._id}
+            blog={blog}
+            onView={() => {
+              setSelectedBlog(blog);
+              setShowViewModal(true);
+            }}
+            onEdit={() => {
+              handleEdit(blog);
+            }}
+            onDelete={() => handleDelete(blog._id)}
+          />
         ))}
       </div>
 
-      {blogs.length === 0 && (
-        <div className="recent-activity">
-          <div className="text-center py-12">
-            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No blog posts found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search or create a new post</p>
-            <button className="btn-primary">
-              <Plus size={16} />
-              <span>Create Your First Post</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* New Post Modal */}
+      {/* CREATE MODAL */}
       {showModal && (
         <div className="modal-overlay-blog" onClick={() => setShowModal(false)}>
-          <div className="modal-content-blog" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content-blog" onClick={e => e.stopPropagation()}>
             <div className="modal-header-blog">
               <div className="modal-header-left">
                 <div className="modal-icon-blog">
-                  <FileText size={24} />
+                  <Plus size={24} />
                 </div>
                 <div>
                   <h2 className="modal-title-blog">Create New Blog Post</h2>
                   <p className="modal-subtitle-blog">Fill in the details to publish your blog</p>
                 </div>
               </div>
-              <button 
-                className="modal-close-blog" 
-                onClick={() => setShowModal(false)}
-              >
-                <X size={20} />
+              <button className="modal-close-blog" onClick={() => setShowModal(false)}>
+                ×
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="modal-form-blog">
-              {/* Title */}
+            <form onSubmit={handleCreate} className="modal-form-blog">
               <div className="form-group-blog">
                 <label className="form-label-blog">
                   <Type size={16} />
@@ -280,14 +199,13 @@ const BlogManage = () => {
                   type="text"
                   name="title"
                   value={formData.title}
-                  onChange={handleInputChange}
+                  onChange={e => setFormData({...formData, title: e.target.value})}
                   className="form-input-blog"
                   placeholder="Enter an engaging title for your blog post"
                   required
                 />
               </div>
 
-              {/* Image URL */}
               <div className="form-group-blog">
                 <label className="form-label-blog">
                   <Image size={16} />
@@ -297,19 +215,13 @@ const BlogManage = () => {
                   type="url"
                   name="image"
                   value={formData.image}
-                  onChange={handleInputChange}
+                  onChange={e => setFormData({...formData, image: e.target.value})}
                   className="form-input-blog"
                   placeholder="https://example.com/image.jpg"
                   required
                 />
-                {formData.image && (
-                  <div className="image-preview-blog">
-                    <img src={formData.image} alt="Preview" onError={(e) => e.target.style.display = 'none'} />
-                  </div>
-                )}
               </div>
 
-              {/* Category & Status */}
               <div className="form-row-blog">
                 <div className="form-group-blog">
                   <label className="form-label-blog">
@@ -319,16 +231,16 @@ const BlogManage = () => {
                   <select
                     name="category"
                     value={formData.category}
-                    onChange={handleInputChange}
+                    onChange={e => setFormData({...formData, category: e.target.value})}
                     className="form-input-blog"
                     required
                   >
                     <option value="">Select Category</option>
-                    <option value="Sustainability">Sustainability</option>
-                    <option value="Construction">Construction</option>
-                    <option value="Safety Standards">Safety Standards</option>
-                    <option value="Technology">Technology</option>
-                    <option value="Innovation">Innovation</option>
+                    <option value="Solar Knowledge">Solar Knowledge</option>
+                    <option value="Government Schemes">Government Schemes</option>
+                    <option value="Micro-Udyog Ideas">Micro-Udyog Ideas</option>
+                    <option value="Rural Development">Rural Development</option>
+                    <option value="Technical Guides">Technical Guides</option>
                   </select>
                 </div>
                 <div className="form-group-blog">
@@ -339,7 +251,7 @@ const BlogManage = () => {
                   <select
                     name="status"
                     value={formData.status}
-                    onChange={handleInputChange}
+                    onChange={e => setFormData({...formData, status: e.target.value})}
                     className="form-input-blog"
                   >
                     <option value="draft">Draft</option>
@@ -348,7 +260,6 @@ const BlogManage = () => {
                 </div>
               </div>
 
-              {/* Excerpt */}
               <div className="form-group-blog">
                 <label className="form-label-blog">
                   <AlignLeft size={16} />
@@ -357,18 +268,14 @@ const BlogManage = () => {
                 <textarea
                   name="excerpt"
                   value={formData.excerpt}
-                  onChange={handleInputChange}
+                  onChange={e => setFormData({...formData, excerpt: e.target.value})}
                   className="form-textarea-blog"
                   placeholder="Write a brief description (150-200 characters recommended)"
                   rows="3"
                   required
                 />
-                <div className="char-count-blog">
-                  {formData.excerpt.length} characters
-                </div>
               </div>
 
-              {/* Content */}
               <div className="form-group-blog">
                 <label className="form-label-blog">
                   <FileText size={16} />
@@ -377,25 +284,21 @@ const BlogManage = () => {
                 <textarea
                   name="content"
                   value={formData.content}
-                  onChange={handleInputChange}
+                  onChange={e => setFormData({...formData, content: e.target.value})}
                   className="form-textarea-blog"
-                  placeholder="Write your blog content here... Use markdown for formatting."
+                  placeholder="Write your blog content here..."
                   rows="10"
                   required
                 />
-                <div className="char-count-blog">
-                  {formData.content.length} characters
-                </div>
               </div>
 
-              {/* Featured Checkbox */}
               <div className="form-checkbox-blog">
                 <input
                   type="checkbox"
                   id="featured"
                   name="featured"
                   checked={formData.featured}
-                  onChange={handleInputChange}
+                  onChange={e => setFormData({...formData, featured: e.target.checked})}
                   className="checkbox-input-blog"
                 />
                 <label htmlFor="featured" className="checkbox-label-blog">
@@ -407,46 +310,195 @@ const BlogManage = () => {
                 </label>
               </div>
 
-              {/* Actions */}
               <div className="modal-actions-blog">
-                <button 
-                  type="button" 
-                  className="btn-cancel-blog"
-                  onClick={() => setShowModal(false)}
-                >
-                  <X size={18} />
-                  Cancel
+                <button type="button" className="btn-cancel-blog" onClick={() => setShowModal(false)}>
+                  <X size={18} /> Cancel
                 </button>
                 <button type="submit" className="btn-submit-blog">
-                  <Save size={18} />
-                  Create Post
+                  <Save size={18} /> Create Post
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+      {/* VIEW MODAL */}
+      {showViewModal && selectedBlog && (
+        <Modal title={selectedBlog.title} onClose={() => setShowViewModal(false)}>
+          <img src={selectedBlog.image} className="rounded-xl mb-4" />
+          <p className="whitespace-pre-wrap text-gray-700">{selectedBlog.content}</p>
+        </Modal>
+      )}
+
+      {/* EDIT MODAL */}
+      {showEditModal && (
+        <div className="modal-overlay-blog" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content-blog" onClick={e => e.stopPropagation()}>
+            <div className="modal-header-blog">
+              <div className="modal-header-left">
+                <div className="modal-icon-blog">
+                  <Edit size={24} />
+                </div>
+                <div>
+                  <h2 className="modal-title-blog">Edit Blog Post</h2>
+                  <p className="modal-subtitle-blog">Update your blog post details</p>
+                </div>
+              </div>
+              <button className="modal-close-blog" onClick={() => setShowEditModal(false)}>
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={handleUpdate} className="modal-form-blog">
+              <div className="form-group-blog">
+                <label className="form-label-blog">
+                  <Type size={16} />
+                  <span>Blog Title *</span>
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={e => setFormData({...formData, title: e.target.value})}
+                  className="form-input-blog"
+                  required
+                />
+              </div>
+
+              <div className="form-group-blog">
+                <label className="form-label-blog">
+                  <Image size={16} />
+                  <span>Featured Image URL *</span>
+                </label>
+                <input
+                  type="url"
+                  name="image"
+                  value={formData.image}
+                  onChange={e => setFormData({...formData, image: e.target.value})}
+                  className="form-input-blog"
+                  required
+                />
+              </div>
+
+              <div className="form-row-blog">
+                <div className="form-group-blog">
+                  <label className="form-label-blog">
+                    <Tag size={16} />
+                    <span>Category *</span>
+                  </label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={e => setFormData({...formData, category: e.target.value})}
+                    className="form-input-blog"
+                    required
+                  >
+                    <option value="">Select Category</option>
+                    <option value="Solar Knowledge">Solar Knowledge</option>
+                    <option value="Government Schemes">Government Schemes</option>
+                    <option value="Micro-Udyog Ideas">Micro-Udyog Ideas</option>
+                    <option value="Rural Development">Rural Development</option>
+                    <option value="Technical Guides">Technical Guides</option>
+                  </select>
+                </div>
+                <div className="form-group-blog">
+                  <label className="form-label-blog">
+                    <Globe size={16} />
+                    <span>Status</span>
+                  </label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={e => setFormData({...formData, status: e.target.value})}
+                    className="form-input-blog"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group-blog">
+                <label className="form-label-blog">
+                  <AlignLeft size={16} />
+                  <span>Excerpt *</span>
+                </label>
+                <textarea
+                  name="excerpt"
+                  value={formData.excerpt}
+                  onChange={e => setFormData({...formData, excerpt: e.target.value})}
+                  className="form-textarea-blog"
+                  rows="3"
+                  required
+                />
+              </div>
+
+              <div className="form-group-blog">
+                <label className="form-label-blog">
+                  <FileText size={16} />
+                  <span>Content *</span>
+                </label>
+                <textarea
+                  name="content"
+                  value={formData.content}
+                  onChange={e => setFormData({...formData, content: e.target.value})}
+                  className="form-textarea-blog"
+                  rows="10"
+                  required
+                />
+              </div>
+
+              <div className="form-checkbox-blog">
+                <input
+                  type="checkbox"
+                  id="featured-edit"
+                  name="featured"
+                  checked={formData.featured}
+                  onChange={e => setFormData({...formData, featured: e.target.checked})}
+                  className="checkbox-input-blog"
+                />
+                <label htmlFor="featured-edit" className="checkbox-label-blog">
+                  <Star size={18} fill={formData.featured ? 'currentColor' : 'none'} />
+                  <div>
+                    <span className="checkbox-title">Mark as Featured Post</span>
+                    <span className="checkbox-desc">Featured posts appear prominently on your blog</span>
+                  </div>
+                </label>
+              </div>
+
+              <div className="modal-actions-blog">
+                <button type="button" className="btn-cancel-blog" onClick={() => setShowEditModal(false)}>
+                  <X size={18} /> Cancel
+                </button>
+                <button type="submit" className="btn-submit-blog">
+                  <Save size={18} /> Update Post
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
 
-// Enhanced Stat Card Component
-const StatCard = ({ icon, title, value, trend, color }) => {
-  return (
-    <div className={`stat-card-compact stat-${color}`}>
-      <div className="stat-icon-compact">{icon}</div>
-      <div className="stat-content-compact">
-        <h3 className="stat-value-compact">{value}</h3>
-        <p className="stat-title-compact">{title}</p>
-        <span className="stat-trend-compact">{trend}</span>
-      </div>
+/* ================= STAT CARD ================= */
+const StatCard = ({ icon, title, value }) => (
+  <div className="stat-card-compact">
+    <div className="stat-icon-compact">{icon}</div>
+    <div className="stat-content-compact">
+      <h3 className="stat-value-compact">{value}</h3>
+      <p className="stat-title-compact">{title}</p>
     </div>
-  );
-};
+  </div>
+);
 
-// Blog Card Component
-const BlogCard = ({ blog }) => (
+/* ================= BLOG CARD ================= */
+const BlogCard = ({ blog, onView, onEdit, onDelete }) => (
   <div className="blog-card-dashboard">
+
     <div className="blog-card-image-dashboard">
       <img src={blog.image} alt={blog.title} />
       {blog.featured && (
@@ -455,20 +507,58 @@ const BlogCard = ({ blog }) => (
         </div>
       )}
     </div>
+
     <div className="blog-card-content-dashboard">
       <div className="blog-card-category-dashboard">{blog.category}</div>
       <h3 className="blog-card-title-dashboard">{blog.title}</h3>
       <p className="blog-card-excerpt-dashboard">{blog.excerpt}</p>
-      <div className="blog-card-footer-dashboard">
-        <div className="blog-card-meta-dashboard">
-          <Eye size={14} />
-          <span>{blog.views}</span>
-        </div>
-        <div className="blog-card-meta-dashboard">
-          <Calendar size={14} />
-          <span>{new Date(blog.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-        </div>
+
+      <div className="flex justify-between text-sm text-gray-500 mt-2">
+        {/* <span className="flex items-center gap-1">
+          <Eye size={14} /> {blog.views || 0}
+        </span> */}
+        <span className="flex items-center gap-1">
+          <Calendar size={14} /> {new Date(blog.createdAt).toLocaleDateString()}
+        </span>
       </div>
+
+      {/* 🔥 FIXED BUTTONS (ONLY CHANGE HERE) */}
+      <div className="flex items-center gap-2 mt-4">
+        {/* <ActionBtn icon={<Eye size={16} />} onClick={onView} /> */}
+        <ActionBtn icon={<Edit size={16} />} onClick={onEdit} color="blue" />
+        <ActionBtn icon={<Trash2 size={16} />} onClick={onDelete} color="red" />
+      </div>
+    </div>
+  </div>
+);
+
+/* ================= ACTION BUTTON ================= */
+const ActionBtn = ({ icon, onClick, color = 'gray' }) => {
+  const map = {
+    gray: 'border-gray-200 text-gray-600 hover:bg-gray-100',
+    blue: 'border-blue-200 text-blue-600 hover:bg-blue-50',
+    red: 'border-red-200 text-red-600 hover:bg-red-50'
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`w-9 h-9 flex items-center justify-center rounded p-2 py-1 px-2 border bg-transition ${map[color]}`}
+    >
+      {icon}
+    </button>
+  );
+};
+
+/* ================= MODAL ================= */
+const Modal = ({ title, children, onClose }) => (
+  <div className="modal-overlay-blog" onClick={onClose}>
+    <div className="modal-content-blog" onClick={e => e.stopPropagation()}>
+      <div className="modal-header-blog">
+        <h2 className="modal-title-blog">{title}</h2>
+        <button onClick={onClose}><X /></button>
+      </div>
+      {children}
     </div>
   </div>
 );

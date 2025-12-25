@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../utils/axiosInstance';
+import AdminLoader from '../components/AdminLoader';
 
 const Blog = () => {
   useEffect(() => {
@@ -16,13 +18,24 @@ const Blog = () => {
     { icon: 'fa-cogs', title: 'Technical Guides', desc: 'Step-by-step installation and maintenance guides' }
   ];
 
-  const blogs = [
-    { title: 'How PM-KUSUM Scheme Helps Farmers Save 90% Electricity Cost', desc: 'Today, irrigation is not just about water, it is about stress, cash and constant calculation.', tag: 'Government Schemes' },
-    { title: 'Difference Between On-Grid, Off-Grid & Hybrid Solar Systems', desc: 'Technical comparison of different solar system types to help you choose the right solution.', tag: 'Solar Knowledge' },
-    { title: 'Starting a Micro Udyog in 2026 – Complete Guide', desc: 'Step-by-step guide to starting small-scale industries with government support and funding options.', tag: 'Micro-Udyog Ideas' },
-    { title: 'Top 5 Subsidy Projects for Rural Entrepreneurs', desc: 'Explore the best government-backed projects and schemes available for rural business development.', tag: 'Rural Development' },
-    { title: 'Solar Water Pump vs Diesel Pump – Full Comparison', desc: 'Detailed cost-benefit analysis comparing solar and diesel pumps for agricultural irrigation systems.', tag: 'Technical Guides' }
-  ];
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedBlog, setSelectedBlog] = useState(null);
+
+  const fetchBlogs = async () => {
+    try {
+      const response = await axiosInstance.get('/api/blogs');
+      setBlogs(response.data.data.slice(0, 5));
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
   return (
     <>
@@ -130,19 +143,157 @@ const Blog = () => {
               <p style={{ fontSize: '18px', color: '#666', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Latest articles and insights from our experts</p>
             </div>
           </div>
-          <div className="row">
-            {blogs.map((blog, i) => (
-              <div key={i} className={`col-lg-${i === 4 ? '12' : '6'} mb-4`}>
-                <div style={{ background: '#f8f9fa', padding: '30px', borderRadius: '10px', boxShadow: '0 5px 15px rgba(0,0,0,0.1)', height: i === 1 ? '200px' : '100%', cursor: 'pointer' }}>
-                  <h4 style={{ color: '#53a92c', marginBottom: '15px' }}>{blog.title}</h4>
-                  <p style={{ color: '#666', marginBottom: '15px' }}>{blog.desc}</p>
-                  <span style={{ color: '#999', fontSize: '14px' }}><i className="fa fa-tag" style={{ marginRight: '5px' }}></i>{blog.tag}</span>
-                </div>
+          {loading ? (
+            <div className="row">
+              <div className="col-12 text-center">
+                <AdminLoader />
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="row">
+              {blogs.map((blog, i) => (
+                <div key={blog._id} className={`col-lg-${i === 4 ? '12' : '6'} mb-4`}>
+                  <div 
+                    style={{ 
+                      background: '#f8f9fa', 
+                      padding: '30px', 
+                      borderRadius: '10px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.1)', 
+                      height: i === 1 ? '200px' : '100%', 
+                      cursor: 'pointer',
+                      transition: 'transform 0.3s ease'
+                    }}
+                    onClick={() => setSelectedBlog(blog)}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    <h4 style={{ color: '#53a92c', marginBottom: '15px' }}>{blog.title}</h4>
+                    <p style={{ color: '#666', marginBottom: '15px' }}>
+                      {blog.content.length > 100 ? `${blog.content.substring(0, 100)}...` : blog.content}
+                    </p>
+                    <span style={{ color: '#999', fontSize: '14px' }}>
+                      <i className="fa fa-tag" style={{ marginRight: '5px' }}></i>{blog.category}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      {selectedBlog && (
+        <div className="modal-overlay-blog" onClick={() => setSelectedBlog(null)}>
+          <div className="modal-content-blog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header-blog">
+              <div className="modal-header-left">
+                <div className="modal-icon-blog">
+                  <i className="fa fa-newspaper-o" style={{ fontSize: '24px' }}></i>
+                </div>
+                <div>
+                  <h2 className="modal-title-blog">{selectedBlog.title}</h2>
+                  <p className="modal-subtitle-blog">Blog Article Details</p>
+                </div>
+              </div>
+              <button 
+                className="modal-close-blog" 
+                onClick={() => setSelectedBlog(null)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-form-blog">
+              {selectedBlog.image && (
+                <div className="form-group-blog mb-4">
+                  <img 
+                    src={selectedBlog.image} 
+                    alt={selectedBlog.title}
+                    style={{ 
+                      width: '100%', 
+                      height: '300px', 
+                      objectFit: 'cover', 
+                      borderRadius: '12px',
+                      boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                    }}
+                  />
+                </div>
+              )}
+              
+              <div className="form-row-blog">
+                <div className="form-group-blog">
+                  <label className="form-label-blog">
+                    <i className="fa fa-tag" style={{ fontSize: '16px' }}></i>
+                    <span>Category</span>
+                  </label>
+                  <div className="form-input-blog bg-gray-50">
+                    <span style={{ 
+                      backgroundColor: '#53a92c', 
+                      color: 'white',
+                      padding: '6px 12px',
+                      borderRadius: '15px',
+                      fontSize: '14px'
+                    }}>
+                      {selectedBlog.category}
+                    </span>
+                  </div>
+                </div>
+                <div className="form-group-blog">
+                  <label className="form-label-blog">
+                    <i className="fa fa-eye" style={{ fontSize: '16px' }}></i>
+                    <span>Views</span>
+                  </label>
+                  <div className="form-input-blog bg-gray-50">{selectedBlog.views || 0} views</div>
+                </div>
+              </div>
+
+              <div className="form-group-blog">
+                <label className="form-label-blog">
+                  <i className="fa fa-calendar" style={{ fontSize: '16px' }}></i>
+                  <span>Published Date</span>
+                </label>
+                <div className="form-input-blog bg-gray-50">
+                  {new Date(selectedBlog.createdAt).toLocaleDateString('en-IN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </div>
+              </div>
+
+              <div className="form-group-blog">
+                <label className="form-label-blog">
+                  <i className="fa fa-file-text-o" style={{ fontSize: '16px' }}></i>
+                  <span>Content</span>
+                </label>
+                <div 
+                  className="form-input-blog bg-gray-50" 
+                  style={{ 
+                    whiteSpace: 'pre-wrap', 
+                    lineHeight: '1.6',
+                    minHeight: '200px',
+                    maxHeight: '400px',
+                    overflowY: 'auto',
+                    textAlign: 'justify'
+                  }}
+                >
+                  {selectedBlog.content}
+                </div>
+              </div>
+
+              <div className="modal-actions-blog">
+                <button 
+                  type="button" 
+                  className="btn-cancel-blog"
+                  onClick={() => setSelectedBlog(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <a href="tel:+917523082381" className="fixed-contact-icon" style={{ position: 'fixed', bottom: '100px', left: '30px', width: '50px', height: '50px', background: '#044c88', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', textDecoration: 'none', boxShadow: '0 4px 12px rgba(83, 169, 44, 0.4)', zIndex: '9997', transition: 'all 0.3s ease', opacity: '0' }} onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(83, 169, 44, 0.6)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(83, 169, 44, 0.4)'; }}>
         <i className="fa fa-phone" style={{ fontSize: '22px' }}></i>

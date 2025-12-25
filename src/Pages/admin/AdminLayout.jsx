@@ -87,16 +87,6 @@ const AdminLayout = () => {
 
           <div className="menu-section">
             <span className="menu-label">User Management</span>
-            {/* <NavLink to="/admin/careers" className="menu-item">
-              <div className="menu-icon">
-                <Briefcase size={20} />
-              </div>
-              <div className="menu-content">
-                <span className="menu-title">Career Applications</span>
-                <span className="menu-desc">Job applications & resumes</span>
-              </div>
-            </NavLink> */}
-
             <NavLink to="/admin/contactus" className="menu-item">
               <div className="menu-icon">
                 <Mail size={20} />
@@ -104,6 +94,36 @@ const AdminLayout = () => {
               <div className="menu-content">
                 <span className="menu-title">Contact Inquiries</span>
                 <span className="menu-desc">Customer messages & support</span>
+              </div>
+            </NavLink>
+
+            <NavLink to="/admin/amc" className="menu-item">
+              <div className="menu-icon">
+                <Settings size={20} />
+              </div>
+              <div className="menu-content">
+                <span className="menu-title">AMC Requests</span>
+                <span className="menu-desc">Annual maintenance contracts</span>
+              </div>
+            </NavLink>
+
+            <NavLink to="/admin/partners" className="menu-item">
+              <div className="menu-icon">
+                <Users size={20} />
+              </div>
+              <div className="menu-content">
+                <span className="menu-title">Partner Requests</span>
+                <span className="menu-desc">Partnership applications</span>
+              </div>
+            </NavLink>
+
+            <NavLink to="/admin/popups" className="menu-item">
+              <div className="menu-icon">
+                <Globe size={20} />
+              </div>
+              <div className="menu-content">
+                <span className="menu-title">Popup Inquiries</span>
+                <span className="menu-desc">Website popup submissions</span>
               </div>
             </NavLink>
           </div>

@@ -89,30 +89,8 @@ const AdminLogin = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        style={{ position: 'relative', width: '100%', maxWidth: '28rem', zIndex: 10 }}
+        style={{ position: 'relative', width: '100%', maxWidth: '24rem', zIndex: 10 }}
       >
-        {/* Back to Website */}
-        <motion.div
-          whileHover={{ x: -5 }}
-          style={{ position: 'absolute', top: '-4rem', left: 0 }}
-        >
-          <Link
-            to="/"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: '#0e6842',
-              textDecoration: 'none',
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              transition: 'color 0.2s'
-            }}
-          >
-            <ArrowLeft size={16} />
-            <span>Back to Website</span>
-          </Link>
-        </motion.div>
 
         {/* Login Card */}
         <motion.div
@@ -129,20 +107,20 @@ const AdminLogin = () => {
           }}
         >
           {/* Header */}
-          <div style={{ padding: '2rem', textAlign: 'center', position: 'relative' }}>
+          <div style={{ padding: '1.5rem', textAlign: 'center', position: 'relative' }}>
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
               style={{
-                width: '5rem',
-                height: '5rem',
+                width: '4rem',
+                height: '4rem',
                 background: 'linear-gradient(135deg, #0e6842, #91d856)',
                 borderRadius: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 1.5rem',
+                margin: '0 auto 1rem',
                 boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
                 position: 'relative'
               }}
@@ -151,8 +129,8 @@ const AdminLogin = () => {
                 src="/assets/images/home01/logo.jpg"
                 alt="KARA Group"
                 style={{
-                  width: '3rem',
-                  height: '3rem',
+                  width: '2.5rem',
+                  height: '2.5rem',
                   borderRadius: '0.5rem',
                   objectFit: 'cover'
                 }}
@@ -171,10 +149,10 @@ const AdminLogin = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
               style={{
-                fontSize: '1.875rem',
+                fontSize: '1.5rem',
                 fontWeight: 'bold',
                 color: 'white',
-                marginBottom: '0.5rem'
+                marginBottom: '0.25rem'
               }}
             >
               Welcome Back!
@@ -193,13 +171,13 @@ const AdminLogin = () => {
           </div>
 
           {/* Login Form */}
-          <div style={{ padding: '2rem', paddingTop: 0 }}>
+          <div style={{ padding: '1.5rem', paddingTop: 0 }}>
             <motion.form
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
               onSubmit={handleSubmit}
-              style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
             >
               {/* Error Message */}
               {error && (
@@ -249,7 +227,7 @@ const AdminLogin = () => {
                     placeholder="admin@karagroup.com"
                     style={{
                       width: '100%',
-                      padding: '1rem 1rem 1rem 3rem',
+                      padding: '0.75rem 0.75rem 0.75rem 2.5rem',
                       background: 'rgba(255, 255, 255, 0.1)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',

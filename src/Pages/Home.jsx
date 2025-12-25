@@ -137,7 +137,7 @@ const Home = () => {
                 <div className="col-lg-8">
                   <div className="row">
                     <div className="col-12">
-                      <div className="services-items" style={{ height: '70vh' }}>
+                      <div className="services-items" style={{ height: '100vh' }}>
                         <i className="flaticon-invention"></i>
                         <div className="services-content">
                           <h4><a href="">India's Renewable Energy Revolution</a></h4>

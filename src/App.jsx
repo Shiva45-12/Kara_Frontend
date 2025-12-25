@@ -30,6 +30,9 @@ import Dashboard from './Pages/admin/Dashboard';
 import ContactManage from './Pages/admin/ContactManage';
 import BlogManage from './Pages/admin/BlogManage';
 import CareerManage from './Pages/admin/CareerManage';
+import AMCManage from './Pages/admin/AMCManage';
+import PartnerManage from './Pages/admin/PartnerManage';
+import PopupManage from './Pages/admin/PopupManage';
 import Settings from './Pages/admin/Settings';
 import ChangePassword from './Pages/admin/ChangePassword';
 import AdminLayout from './Pages/admin/AdminLayout';
@@ -78,8 +81,10 @@ function App() {
             >
               <Route index element={<Dashboard />} />
               <Route path="blogs" element={<BlogManage />} />
-              {/* <Route p  ath="careers" element={<CareerManage />} /> */}
               <Route path="contactus" element={<ContactManage />} />
+              <Route path="amc" element={<AMCManage />} />
+              <Route path="partners" element={<PartnerManage />} />
+              <Route path="popups" element={<PopupManage />} />
               <Route path="settings" element={<Settings />} />
               <Route path="change-password" element={<ChangePassword />} />
             </Route>

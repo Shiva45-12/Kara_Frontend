@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Eye, EyeOff, Save, Shield } from 'lucide-react';
+import axiosInstance from '../../utils/axiosInstance';
+import Swal from 'sweetalert2';
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -42,18 +44,44 @@ const ChangePassword = () => {
       return;
     }
 
+    if (formData.currentPassword === formData.newPassword) {
+      setMessage({ type: 'error', text: 'New password must be different from current password!' });
+      return;
+    }
+
     setLoading(true);
     setMessage({ type: '', text: '' });
 
     try {
-      // API call would go here
-      setTimeout(() => {
+      const response = await axiosInstance.put('/api/admin/change-password', {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      });
+
+      if (response.data.success) {
         setMessage({ type: 'success', text: 'Password changed successfully!' });
         setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        setLoading(false);
-      }, 1000);
+        
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your password has been changed successfully.',
+          icon: 'success',
+          timer: 3000,
+          showConfirmButton: false
+        });
+      }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to change password. Please try again.' });
+      console.error('Change password error:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to change password. Please try again.';
+      setMessage({ type: 'error', text: errorMessage });
+      
+      Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
       setLoading(false);
     }
   };

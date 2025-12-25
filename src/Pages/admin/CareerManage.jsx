@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import axios from "../../../axiosInstance";
 import { toast } from "react-toastify";
+import AdminLoader from '../../components/AdminLoader';
 
 function CareerManage() {
   const [applications, setApplications] = useState([]);
@@ -355,13 +356,7 @@ function CareerManage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </div>
-    );
+    return <AdminLoader message="Loading career data..." />;
   }
 
   return (
