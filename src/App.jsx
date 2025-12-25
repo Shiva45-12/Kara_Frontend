@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -40,7 +40,7 @@ import ProtectedRoute from './Components/admin/ProtectedRoute';
 
 import './App.css';
 
-// Public Layout Component
+// Public Layout
 const PublicLayout = ({ children }) => {
   return (
     <>
@@ -65,43 +65,43 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <Router>
-          <Routes>
-            {/* ========== ADMIN LOGIN ========== */}
-            <Route path="/admin/login" element={<AdminLogin />} />
+        <Routes>
 
-            {/* ========== ADMIN PANEL ========== */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="blogs" element={<BlogManage />} />
-              <Route path="contactus" element={<ContactManage />} />
-              <Route path="amc" element={<AMCManage />} />
-              <Route path="partners" element={<PartnerManage />} />
-              <Route path="popups" element={<PopupManage />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="change-password" element={<ChangePassword />} />
-            </Route>
+          {/* ========= ADMIN LOGIN ========= */}
+          <Route path="/admin/login" element={<AdminLogin />} />
 
-            {/* ========== PUBLIC WEBSITE ========== */}
-            <Route path="/" element={<PublicLayout><PageWrapper><Home /></PageWrapper></PublicLayout>} />
-            <Route path="/about" element={<PublicLayout><PageWrapper><About /></PageWrapper></PublicLayout>} />
-            <Route path="/contact" element={<PublicLayout><PageWrapper><Contact /></PageWrapper></PublicLayout>} />
-            <Route path="/partner" element={<PublicLayout><PageWrapper><Partner /></PageWrapper></PublicLayout>} />
-            <Route path="/blog" element={<PublicLayout><PageWrapper><Blog /></PageWrapper></PublicLayout>} />
-            <Route path="/amc" element={<PublicLayout><PageWrapper><AMC /></PageWrapper></PublicLayout>} />
-            <Route path="/solar-power-plant" element={<PublicLayout><PageWrapper><SolarPowerPlant /></PageWrapper></PublicLayout>} />
-            <Route path="/product" element={<PublicLayout><PageWrapper><Product /></PageWrapper></PublicLayout>} />
-            <Route path="/download" element={<PublicLayout><PageWrapper><Download /></PageWrapper></PublicLayout>} />
-            <Route path="/testimonials" element={<PublicLayout><PageWrapper><Testimonials /></PageWrapper></PublicLayout>} />
-          </Routes>
-        </Router>
+          {/* ========= ADMIN PANEL ========= */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="blogs" element={<BlogManage />} />
+            <Route path="contactus" element={<ContactManage />} />
+            <Route path="amc" element={<AMCManage />} />
+            <Route path="partners" element={<PartnerManage />} />
+            <Route path="popups" element={<PopupManage />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="change-password" element={<ChangePassword />} />
+          </Route>
+
+          {/* ========= PUBLIC WEBSITE ========= */}
+          <Route path="/" element={<PublicLayout><PageWrapper><Home /></PageWrapper></PublicLayout>} />
+          <Route path="/about" element={<PublicLayout><PageWrapper><About /></PageWrapper></PublicLayout>} />
+          <Route path="/contact" element={<PublicLayout><PageWrapper><Contact /></PageWrapper></PublicLayout>} />
+          <Route path="/partner" element={<PublicLayout><PageWrapper><Partner /></PageWrapper></PublicLayout>} />
+          <Route path="/blog" element={<PublicLayout><PageWrapper><Blog /></PageWrapper></PublicLayout>} />
+          <Route path="/amc" element={<PublicLayout><PageWrapper><AMC /></PageWrapper></PublicLayout>} />
+          <Route path="/solar-power-plant" element={<PublicLayout><PageWrapper><SolarPowerPlant /></PageWrapper></PublicLayout>} />
+          <Route path="/product" element={<PublicLayout><PageWrapper><Product /></PageWrapper></PublicLayout>} />
+          <Route path="/download" element={<PublicLayout><PageWrapper><Download /></PageWrapper></PublicLayout>} />
+          <Route path="/testimonials" element={<PublicLayout><PageWrapper><Testimonials /></PageWrapper></PublicLayout>} />
+
+        </Routes>
       </ThemeProvider>
     </AuthProvider>
   );
