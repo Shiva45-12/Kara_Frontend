@@ -1,0 +1,370 @@
+/* Mobile Center Optimization CSS */
+
+/* Mobile Text Justification and Centering */
+@media (max-width: 768px) {
+    /* Global text justify for mobile */
+    p, .para p, .services-content p, .work-content p, .cause-content p, .blog-content p, .testimonial-content p {
+        text-align: justify !important;
+        text-justify: inter-word !important;
+        line-height: 1.5 !important;
+        font-size: 14px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Container and content centering */
+    .container {
+        padding: 0 15px !important;
+        max-width: 100% !important;
+    }
+
+    /* Section padding reduction */
+    section {
+        padding: 30px 0 !important;
+    }
+
+    .bg-services-section, .bg-people-work-section, .bg-focus-cause-section {
+        padding: 25px 0 !important;
+    }
+
+    /* Row gap reduction */
+    .row {
+        margin: 0 -10px !important;
+    }
+
+    .row > div {
+        padding: 0 10px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Card spacing optimization */
+    .services-items, .people-work-items, .cause-items, .count-items, .blog-items {
+        margin-bottom: 20px !important;
+        padding: 15px !important;
+    }
+
+    /* Content centering */
+    .section-header {
+        text-align: center !important;
+        margin-bottom: 30px !important;
+        padding: 0 10px !important;
+    }
+
+    .section-header h2 {
+        font-size: 24px !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+    }
+
+    .section-header p {
+        text-align: center !important;
+        font-size: 14px !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Services section mobile optimization */
+    .services-header {
+        text-align: center !important;
+        margin-bottom: 25px !important;
+        padding: 15px !important;
+    }
+
+    .services-header h3 {
+        font-size: 18px !important;
+        text-align: center !important;
+        margin-bottom: 10px !important;
+    }
+
+    .services-header p {
+        text-align: justify !important;
+        font-size: 14px !important;
+    }
+
+    /* Work content mobile */
+    .work-content h4 {
+        font-size: 16px !important;
+        text-align: center !important;
+        margin-bottom: 10px !important;
+    }
+
+    .work-content p {
+        text-align: justify !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Cause content mobile */
+    .cause-content h4 {
+        font-size: 16px !important;
+        text-align: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    .cause-content p {
+        text-align: justify !important;
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Government support section mobile */
+    .govt-support-header {
+        font-size: 22px !important;
+        text-align: center !important;
+        padding: 0 15px !important;
+        margin-bottom: 40px !important;
+    }
+
+    /* KUSUM components mobile centering */
+    .kusum-components {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        align-items: center !important;
+    }
+
+    .kusum-component {
+        width: 100% !important;
+        max-width: 350px !important;
+        margin: 0 auto 10px auto !important;
+        padding: 15px !important;
+    }
+
+    .kusum-component h5 {
+        text-align: center !important;
+        font-size: 14px !important;
+    }
+
+    .kusum-component p {
+        text-align: justify !important;
+        font-size: 13px !important;
+    }
+
+    /* Key Benefits section mobile */
+    section[style*="background: #f8f9fa"] .row[style*="display: flex"] {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+    }
+
+    section[style*="background: #f8f9fa"] .row[style*="display: flex"] > div {
+        flex: none !important;
+        width: 90% !important;
+        max-width: 320px !important;
+        margin: 0 auto 15px auto !important;
+        padding: 8px !important;
+    }
+
+    section[style*="background: #f8f9fa"] .row[style*="display: flex"] > div > div {
+        padding: 20px !important;
+        min-height: 160px !important;
+        text-align: center !important;
+    }
+
+    /* Why Choose section mobile */
+    section[style*="background: white"] .row[style*="display: flex"] {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+    }
+
+    section[style*="background: white"] .row[style*="display: flex"] > div {
+        flex: none !important;
+        width: 90% !important;
+        max-width: 350px !important;
+        margin: 0 auto 15px auto !important;
+        padding: 8px !important;
+    }
+
+    /* Blog section mobile */
+    section[style*="background: #f8f9fa"] .row[style*="display: flex"]:last-child > div {
+        flex: none !important;
+        width: 90% !important;
+        max-width: 400px !important;
+        margin: 0 auto 15px auto !important;
+    }
+
+    /* Testimonial mobile */
+    .testimonial-content p {
+        text-align: justify !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        padding: 0 10px !important;
+    }
+
+    .author-name h4 {
+        font-size: 15px !important;
+        text-align: center !important;
+    }
+
+    .author-name h6 {
+        font-size: 12px !important;
+        text-align: center !important;
+    }
+
+    /* Footer mobile optimization */
+    footer .col-lg-4, footer .col-md-6 {
+        margin-bottom: 25px !important;
+        text-align: center !important;
+    }
+
+    footer p {
+        text-align: center !important;
+        font-size: 14px !important;
+    }
+
+    footer ul li {
+        text-align: left !important;
+    }
+
+    /* Our Services section mobile centering */
+    footer .col-lg-4:nth-child(2) {
+        text-align: center !important;
+    }
+
+    footer .col-lg-4:nth-child(2) h4 {
+        text-align: center !important;
+    }
+
+    footer .col-lg-4:nth-child(2) ul {
+        text-align: center !important;
+        padding: 0 !important;
+    }
+
+    footer .col-lg-4:nth-child(2) ul li {
+        text-align: center !important;
+        padding-left: 0 !important;
+    }
+
+    /* Connect With Us section mobile centering */
+    footer .col-lg-4:last-child {
+        text-align: center !important;
+    }
+
+    footer .col-lg-4:last-child div[style*="display: flex; flex-direction: column"] {
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    footer .col-lg-4:last-child div[style*="display: flex; flex-direction: column"] p {
+        text-align: center !important;
+        margin: 8px 0 !important;
+    }
+
+    /* Social icons centering */
+    .social-icons {
+        justify-content: center !important;
+        margin-top: 15px !important;
+    }
+
+    /* Table mobile optimization */
+    table {
+        font-size: 11px !important;
+        margin: 10px 0 !important;
+    }
+
+    th, td {
+        padding: 6px 4px !important;
+        text-align: center !important;
+    }
+
+    /* Button centering */
+    .btn, .slider-btn {
+        display: block !important;
+        margin: 15px auto !important;
+        text-align: center !important;
+        max-width: 200px !important;
+    }
+
+    /* Custom Documentation section mobile */
+    .row.mt-5 .col-12 > div a {
+        display: block !important;
+        margin: 10px auto !important;
+        text-align: center !important;
+        max-width: 250px !important;
+    }
+
+    /* Image centering */
+    .services-header img {
+        display: block !important;
+        margin: 0 auto 15px auto !important;
+        width: 120px !important;
+    }
+
+    /* Count section mobile */
+    .count-items {
+        text-align: center !important;
+        margin-bottom: 20px !important;
+        padding: 15px !important;
+    }
+
+    .count-items h4 {
+        font-size: 14px !important;
+        text-align: center !important;
+    }
+
+    /* Projects grid mobile */
+    .cause-items {
+        margin-bottom: 15px !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+    }
+
+    /* Slider content mobile */
+    .slider-content {
+        text-align: center !important;
+        padding: 15px !important;
+    }
+
+    .slider-content h2 {
+        font-size: 20px !important;
+        text-align: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    .slider-content h3 {
+        font-size: 14px !important;
+        text-align: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    .slider-content p {
+        font-size: 12px !important;
+        text-align: center !important;
+        margin-bottom: 12px !important;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 576px) {
+    .container {
+        padding: 0 10px !important;
+    }
+
+    section {
+        padding: 20px 0 !important;
+    }
+
+    .row {
+        margin: 0 -5px !important;
+    }
+
+    .row > div {
+        padding: 0 5px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .section-header h2 {
+        font-size: 20px !important;
+    }
+
+    .govt-support-header {
+        font-size: 18px !important;
+    }
+
+    p, .para p {
+        font-size: 13px !important;
+    }
+
+    .services-items, .people-work-items, .cause-items {
+        padding: 12px !important;
+    }
+}

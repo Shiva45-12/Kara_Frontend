@@ -1,0 +1,173 @@
+/* Mobile Responsive Fixes */
+
+/* Hero Slider Mobile Fixes */
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 60vh !important;
+    min-height: 400px !important;
+  }
+  
+  .hero-slider .slider-content h3 {
+    font-size: 16px !important;
+    letter-spacing: 1px !important;
+  }
+  
+  .hero-slider .slider-content h2 {
+    font-size: 24px !important;
+    line-height: 1.3 !important;
+  }
+  
+  .hero-slider .slider-content p {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+}
+
+/* Key Benefits Section Mobile */
+@media (max-width: 768px) {
+  .key-benefits-row {
+    flex-direction: column !important;
+  }
+  
+  .key-benefit-item {
+    flex: 1 !important;
+    margin-bottom: 20px !important;
+  }
+}
+
+/* Why Choose KARA GROUP Mobile */
+@media (max-width: 768px) {
+  .why-choose-item {
+    flex: 0 0 100% !important;
+    padding: 10px !important;
+  }
+}
+
+/* Blog Section Mobile */
+@media (max-width: 768px) {
+  .blog-item {
+    flex: 0 0 100% !important;
+    padding: 10px !important;
+  }
+}
+
+/* Projects Grid Mobile */
+@media (max-width: 768px) {
+  .project-item {
+    flex: 0 0 50% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-item {
+    flex: 0 0 100% !important;
+  }
+}
+
+/* Services Section Mobile */
+@media (max-width: 768px) {
+  .services-items {
+    height: auto !important;
+    min-height: 300px !important;
+  }
+  
+  .services-header img {
+    width: 100px !important;
+    height: auto !important;
+  }
+  
+  .kusum-components {
+    flex-direction: column !important;
+  }
+  
+  .kusum-component {
+    min-width: 100% !important;
+    margin-bottom: 15px !important;
+  }
+}
+
+/* Government Support Section Mobile */
+@media (max-width: 768px) {
+  .govt-support-header {
+    font-size: 24px !important;
+    text-align: center !important;
+  }
+  
+  .services-header table {
+    font-size: 8px !important;
+    min-width: 280px !important;
+  }
+  
+  .services-header table th,
+  .services-header table td {
+    padding: 4px 2px !important;
+    font-size: 8px !important;
+    white-space: nowrap !important;
+  }
+  
+  .services-header table th {
+    font-size: 9px !important;
+  }
+  
+  /* Table container with horizontal scroll */
+  .services-header div[style*="overflowX"] {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin: 10px -10px !important;
+    padding: 0 10px !important;
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .services-header div[style*="overflowX"]::-webkit-scrollbar {
+    height: 3px;
+  }
+  
+  .services-header div[style*="overflowX"]::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  .services-header div[style*="overflowX"]::-webkit-scrollbar-thumb {
+    background: #53a92c;
+    border-radius: 3px;
+  }
+}
+
+/* General Mobile Fixes */
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 40px 0 !important;
+  }
+  
+  .section-title {
+    font-size: 24px !important;
+  }
+  
+  .section-description {
+    font-size: 14px !important;
+    text-align: center !important;
+  }
+  
+  .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  h2 {
+    font-size: 24px !important;
+    text-align: center !important;
+  }
+  
+  h3 {
+    font-size: 20px !important;
+  }
+  
+  h4 {
+    font-size: 18px !important;
+  }
+  
+  p {
+    font-size: 14px !important;
+    text-align: justify !important;
+  }
+}

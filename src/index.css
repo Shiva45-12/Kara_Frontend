@@ -1,0 +1,27 @@
+/* Preload fonts to reduce console warnings */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/assets/fonts/fontawesome-webfont.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Flaticon';
+  src: url('/assets/fonts/Flaticon.woff') format('woff');
+  font-display: swap;
+}
+
+/* Suppress React DevTools message */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
