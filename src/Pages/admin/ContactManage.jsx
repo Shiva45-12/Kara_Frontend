@@ -14,8 +14,8 @@ import {
   MessageSquare,
   Clock,
 } from "lucide-react";
-import AdminLoader from '../../components/AdminLoader';
-import AdminPagination from '../../components/AdminPagination';
+import AdminLoader from '../../Components/AdminLoader';
+import AdminPagination from '../../Components/AdminPagination';
 
 function ContactManage() {
   const [contacts, setContacts] = useState([]);
