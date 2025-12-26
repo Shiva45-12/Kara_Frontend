@@ -107,7 +107,9 @@ const stats = {
     (c) =>
       c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.subject?.toLowerCase().includes(searchTerm.toLowerCase())
+      c.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.city?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination logic
@@ -212,7 +214,7 @@ const stats = {
         {/* <Search className="admin-search-icon" /> */}
         <input
           type="text"
-          placeholder="Search contacts by name, email or subject..."
+          placeholder="Search contacts by name, email, subject, phone or city..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="admin-search-input rounded -lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
