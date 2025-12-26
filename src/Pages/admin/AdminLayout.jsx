@@ -21,6 +21,10 @@ const AdminLayout = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   const cycleTheme = () => {
     const themes = ['light', 'dark', 'system'];
     const currentIndex = themes.indexOf(theme);
@@ -61,7 +65,7 @@ const AdminLayout = () => {
         <nav className="admin-menu">
           <div className="menu-section">
             <span className="menu-label">Main</span>
-            <NavLink to="/admin" end className="menu-item">
+            <NavLink to="/admin" end className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <LayoutDashboard size={20} />
               </div>
@@ -74,7 +78,7 @@ const AdminLayout = () => {
 
           <div className="menu-section">
             <span className="menu-label">Content Management</span>
-            <NavLink to="/admin/blogs" className="menu-item">
+            <NavLink to="/admin/blogs" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <BookOpen size={20} />
               </div>
@@ -87,7 +91,7 @@ const AdminLayout = () => {
 
           <div className="menu-section">
             <span className="menu-label">User Management</span>
-            <NavLink to="/admin/contactus" className="menu-item">
+            <NavLink to="/admin/contactus" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <Mail size={20} />
               </div>
@@ -97,7 +101,7 @@ const AdminLayout = () => {
               </div>
             </NavLink>
 
-            <NavLink to="/admin/amc" className="menu-item">
+            <NavLink to="/admin/amc" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <Settings size={20} />
               </div>
@@ -107,7 +111,7 @@ const AdminLayout = () => {
               </div>
             </NavLink>
 
-            <NavLink to="/admin/partners" className="menu-item">
+            <NavLink to="/admin/partners" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <Users size={20} />
               </div>
@@ -117,7 +121,7 @@ const AdminLayout = () => {
               </div>
             </NavLink>
 
-            <NavLink to="/admin/popups" className="menu-item">
+            <NavLink to="/admin/popups" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <Globe size={20} />
               </div>
@@ -130,7 +134,7 @@ const AdminLayout = () => {
 
           <div className="menu-section">
             <span className="menu-label">System</span>
-            <NavLink to="/admin/settings" className="menu-item">
+            <NavLink to="/admin/settings" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <Settings size={20} />
               </div>
@@ -140,7 +144,7 @@ const AdminLayout = () => {
               </div>
             </NavLink>
             
-            <NavLink to="/admin/change-password" className="menu-item">
+            <NavLink to="/admin/change-password" className="menu-item" onClick={closeSidebar}>
               <div className="menu-icon">
                 <Lock size={20} />
               </div>

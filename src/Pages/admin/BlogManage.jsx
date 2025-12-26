@@ -4,6 +4,7 @@ import {
   Globe, Star, RefreshCw, X, Image, Tag, Type, AlignLeft, Save
 } from 'lucide-react';
 import AdminLoader from '../../Components/AdminLoader';
+import AdminPagination from '../../components/AdminPagination';
 import axiosInstance from '../../utils/axiosInstance';
 import Swal from 'sweetalert2';
 
@@ -16,6 +17,10 @@ const BlogManage = () => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
   const [selectedBlog, setSelectedBlog] = useState(null);
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const [formData, setFormData] = useState({
     title: '',
@@ -109,12 +114,22 @@ const BlogManage = () => {
     fetchBlogs();
   };
 
-  /* ================= STATS (UNCHANGED) ================= */
+  /* ================= STATS & PAGINATION ================= */
   const stats = {
     total: blogs.length,
     published: blogs.filter(b => b.status === 'published').length,
     drafts: blogs.filter(b => b.status === 'draft').length,
     featured: blogs.filter(b => b.featured).length
+  };
+
+  // Pagination calculations
+  const totalPages = Math.ceil(blogs.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentBlogs = blogs.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   if (loading) return <AdminLoader message="Loading blog posts..." />;
@@ -154,7 +169,7 @@ const BlogManage = () => {
 
       {/* BLOG GRID */}
       <div className="blog-grid-dashboard">
-        {blogs.map(blog => (
+        {currentBlogs.map(blog => (
           <BlogCard
             key={blog._id}
             blog={blog}
@@ -169,6 +184,18 @@ const BlogManage = () => {
           />
         ))}
       </div>
+
+      {/* PAGINATION */}
+      {blogs.length > 0 && (
+        <AdminPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={blogs.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          loading={loading || isRefreshing}
+        />
+      )}
 
       {/* CREATE MODAL */}
       {showModal && (
@@ -522,7 +549,7 @@ const BlogCard = ({ blog, onView, onEdit, onDelete }) => (
         </span>
       </div>
 
-      {/* 🔥 FIXED BUTTONS (ONLY CHANGE HERE) */}
+      {/*  FIXED BUTTONS (ONLY CHANGE HERE) */}
       <div className="flex items-center gap-2 mt-4">
         {/* <ActionBtn icon={<Eye size={16} />} onClick={onView} /> */}
         <ActionBtn icon={<Edit size={16} />} onClick={onEdit} color="blue" />
@@ -542,6 +569,7 @@ const ActionBtn = ({ icon, onClick, color = 'gray' }) => {
 
   return (
     <button
+    style={{backgroundColor:"transparent" , color:"red" , margin:"4px" , hover:{text:"white"}}}
       onClick={onClick}
       className={`w-9 h-9 flex items-center justify-center rounded p-2 py-1 px-2 border bg-transition ${map[color]}`}
     >
