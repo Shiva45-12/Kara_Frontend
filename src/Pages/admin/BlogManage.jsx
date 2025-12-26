@@ -4,7 +4,7 @@ import {
   Globe, Star, RefreshCw, X, Image, Tag, Type, AlignLeft, Save
 } from 'lucide-react';
 import AdminLoader from '../../Components/AdminLoader';
-import AdminPagination from '../../components/AdminPagination';
+import AdminPagination from '../../Components/AdminPagination';
 import axiosInstance from '../../utils/axiosInstance';
 import Swal from 'sweetalert2';
 
