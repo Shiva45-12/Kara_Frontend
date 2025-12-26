@@ -26,21 +26,14 @@ const AdminLayout = () => {
   };
 
   const cycleTheme = () => {
-    const themes = ['light', 'dark', 'system'];
+    const themes = ['light', 'dark'];
     const currentIndex = themes.indexOf(theme);
     const nextIndex = (currentIndex + 1) % themes.length;
     changeTheme(themes[nextIndex]);
   };
 
   const getThemeIcon = () => {
-    switch (theme) {
-      case 'dark':
-        return <Moon size={16} />;
-      case 'system':
-        return <Monitor size={16} />;
-      default:
-        return <Sun size={16} />;
-    }
+    return theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />;
   };
 
   return (

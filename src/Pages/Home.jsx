@@ -10,6 +10,7 @@ const Home = () => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [currentGroup, setCurrentGroup] = useState(0);
 
   const testimonials = [
     {
@@ -53,6 +54,9 @@ const Home = () => {
       location: "Gonda"
     }
   ];
+
+  const cardsPerGroup = 3;
+  const totalGroups = Math.ceil(testimonials.length / cardsPerGroup);
 
   useEffect(() => {
     // Intersection Observer for counter animation on scroll
@@ -105,13 +109,13 @@ const Home = () => {
   }, [hasAnimated]);
 
   useEffect(() => {
-    // Auto slide testimonials using React state
+    // Auto slide testimonials in groups of 3
     const autoSlide = setInterval(() => {
-      setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
-    }, 3000); // 3 seconds
+      setCurrentGroup((prev) => (prev + 1) % totalGroups);
+    }, 4000); // 4 seconds per group
     
     return () => clearInterval(autoSlide);
-  }, [testimonials.length]);
+  }, [totalGroups]);
 
   return (
     <>
@@ -580,44 +584,159 @@ const Home = () => {
               <div className="testimonial-option">
                 <div className="section-header">
                   <h2>Testimonials</h2>
-                  <p style={{ textAlign: 'center !important' }}>Professionally mesh enterprise wide imperatives without world class paradigms. Dynamically deliver ubiquitous leadership awesome skills.</p>
+                  <p style={{ textAlign: 'center !important' }}>What our satisfied customers say about KARA GROUP solar solutions</p>
                 </div>
-                <div className="testimonial-container">
-                  <div className="testimonial-slide" style={{ display: 'block' }}>
-                    <div className="testimonial-content">
-                      <div style={{ marginBottom: '15px', textAlign: 'center' }}>
-                        {[...Array(5)].map((_, i) => (
-                          <i key={i} className="fa fa-star" style={{ color: '#FFD700', fontSize: '18px', marginRight: '3px' }}></i>
-                        ))}
+                
+                {/* Testimonial Cards Carousel */}
+                <div className="testimonial-carousel" style={{ 
+                  position: 'relative',
+                  overflow: 'hidden',
+                  padding: '20px 0'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    transform: `translateX(-${currentGroup * 100}%)`,
+                    transition: 'transform 0.5s ease-in-out',
+                    gap: '20px'
+                  }}>
+                    {Array.from({ length: totalGroups }).map((_, groupIndex) => (
+                      <div key={groupIndex} style={{
+                        display: 'flex',
+                        gap: '20px',
+                        minWidth: '100%',
+                        justifyContent: 'center'
+                      }}>
+                        {testimonials
+                          .slice(groupIndex * cardsPerGroup, (groupIndex + 1) * cardsPerGroup)
+                          .map((testimonial, idx) => {
+                            const actualIndex = groupIndex * cardsPerGroup + idx;
+                            return (
+                              <div 
+                                key={actualIndex} 
+                                className="testimonial-card" 
+                                style={{
+                                  minWidth: '300px',
+                                  maxWidth: '350px',
+                                  background: 'rgba(255, 255, 255, 0.95)',
+                                  borderRadius: '15px',
+                                  padding: '25px',
+                                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                                  transition: 'all 0.3s ease',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={() => setCurrentGroup(groupIndex)}
+                                onMouseOver={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1.05)';
+                                  e.currentTarget.style.boxShadow = '0 12px 35px rgba(83, 169, 44, 0.2)';
+                                }}
+                                onMouseOut={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1)';
+                                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.1)';
+                                }}
+                              >
+                                {/* Stars */}
+                                <div style={{ marginBottom: '15px', textAlign: 'center' }}>
+                                  {[...Array(5)].map((_, i) => (
+                                    <i key={i} className="fa fa-star" style={{ 
+                                      color: '#FFD700', 
+                                      fontSize: '16px', 
+                                      marginRight: '2px' 
+                                    }}></i>
+                                  ))}
+                                </div>
+                                
+                                {/* Testimonial Text */}
+                                <p style={{
+                                  color: '#333',
+                                  fontSize: '14px',
+                                  lineHeight: '1.6',
+                                  marginBottom: '20px',
+                                  fontStyle: 'italic',
+                                  textAlign: 'center',
+                                  minHeight: '80px',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 4,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden'
+                                }}>
+                                  "{testimonial.text}"
+                                </p>
+                                
+                                {/* Author Info */}
+                                <div style={{ 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center',
+                                  gap: '12px'
+                                }}>
+                                  <div style={{
+                                    width: '45px',
+                                    height: '45px',
+                                    borderRadius: '50%',
+                                    overflow: 'hidden',
+                                    border: '2px solid #53a92c'
+                                  }}>
+                                    <img 
+                                      src="/assets/images/home01/male.jpeg" 
+                                      alt={testimonial.name}
+                                      style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover'
+                                      }}
+                                    />
+                                  </div>
+                                  <div style={{ textAlign: 'left' }}>
+                                    <h5 style={{ 
+                                      color: '#333', 
+                                      fontSize: '16px', 
+                                      fontWeight: '600',
+                                      margin: '0 0 2px 0'
+                                    }}>
+                                      {testimonial.name}
+                                    </h5>
+                                    <p style={{ 
+                                      color: '#666', 
+                                      fontSize: '12px',
+                                      margin: 0
+                                    }}>
+                                      {testimonial.location}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })
+                        }
                       </div>
-                      <p>"{testimonials[testimonialIndex]?.text}"</p>
-                    </div>
-                    <div className="author-details">
-                      <div className="author-img">
-                        <img src="/assets/images/home01/male.jpeg" alt={`testimonial-author-img-${testimonialIndex + 1}`} />
-                      </div>
-                      <div className="author-name">
-                        <h4>{testimonials[testimonialIndex]?.name}</h4>
-                        <h6>{testimonials[testimonialIndex]?.location}</h6>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
-                <div className="swiper-pagination">
-                  {testimonials.map((_, idx) => (
+                
+                {/* Navigation Dots */}
+                <div className="swiper-pagination" style={{ textAlign: 'center', marginTop: '30px' }}>
+                  {Array.from({ length: totalGroups }).map((_, groupIdx) => (
                     <span 
-                      key={idx} 
+                      key={groupIdx} 
                       className="swiper-pagination-bullet"
-                      onClick={() => setTestimonialIndex(idx)}
+                      onClick={() => setCurrentGroup(groupIdx)}
                       style={{
                         width: '12px',
                         height: '12px',
                         borderRadius: '50%',
-                        background: idx === testimonialIndex ? '#53a92c' : 'rgba(255,255,255,0.5)',
+                        background: groupIdx === currentGroup ? '#53a92c' : 'rgba(255,255,255,0.5)',
                         display: 'inline-block',
                         margin: '0 5px',
                         cursor: 'pointer',
-                        transition: 'all 0.3s ease'
+                        transition: 'all 0.3s ease',
+                        border: '2px solid transparent'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.border = '2px solid #53a92c';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.border = '2px solid transparent';
                       }}
                     />
                   ))}
@@ -670,7 +789,7 @@ const Home = () => {
               <div style={{ background: 'white', padding: '30px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.08)', transition: 'all 0.3s ease' }} onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 8px 25px rgba(83, 169, 44, 0.2)'; e.currentTarget.style.transform = 'translateY(-5px)'; }} onMouseOut={(e) => { e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                 <img src="/assets/images/home01/custom copy.png" style={{ fontSize: '40px', color: '#53a92c', marginBottom: '15px', display: 'block' }} alt="Custom Engineering" />
                 <h4 style={{ color: '#333', marginBottom: '10px', fontSize: '18px' }}>Custom Engineering</h4>
-                <p style={{ color: '#666', fontSize: '13px', letterSpacing: '-0.5px', textAlign: 'center' }}>Tailored solutions designed for your specific needs</p>
+                <p style={{ color: '#666', fontSize: '13px', letterSpacing: '-0.5px', textAlign: 'center' }}>Tailored solutions designed for your specific </p>
               </div>
             </div>
           </div>

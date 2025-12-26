@@ -58,13 +58,15 @@ const Contact = () => {
   return (
     <>
       {/* Hero Section */}
-      <section style={{ 
-        background: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("/assets/images/home01/slider-img-1.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        padding: '150px 0 100px',
-        color: 'white'
-      }}>
+      <section 
+      // style={{ 
+        // background: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("/assets/images/home01/slider-img-1.jpg")',
+        // backgroundSize: 'cover',
+        // backgroundPosition: 'center',
+        // padding: '150px 0 100px',
+        // color: 'white'
+      // }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-12 text-center">

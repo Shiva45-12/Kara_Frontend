@@ -2,6 +2,7 @@ import { FileText, Briefcase, Eye, Activity, Plus, Users, BarChart3, Settings, R
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
+import { useTheme } from "../../context/ThemeContext";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,7 +15,7 @@ import {
   Filler,
   ArcElement
 } from 'chart.js';
-import { Line, Pie } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +30,7 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const { theme } = useTheme();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [stats, setStats] = useState({
@@ -167,134 +169,9 @@ const Dashboard = () => {
       {/* Analytics Chart */}
       <div className="recent-activity-stats">
         <h2 className="section-title">System Analytics</h2>
-        <div style={{ 
-          background: 'white', 
-          padding: '30px', 
-          borderRadius: '12px', 
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          marginBottom: '20px'
-        }}>
-          <Line 
-            data={{
-              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-              datasets: [
-                {
-                  label: 'Blog Posts',
-                  data: [2, 4, 3, 5, 4, 6, 7, 5, 8, 6, 9, stats.blogs],
-                  borderColor: '#3b82f6',
-                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                  fill: true,
-                  tension: 0.4
-                },
-                {
-                  label: 'Contact Messages',
-                  data: [15, 25, 20, 30, 35, 28, 40, 45, 38, 50, 42, stats.contacts],
-                  borderColor: '#10b981',
-                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                  fill: true,
-                  tension: 0.4
-                },
-                {
-                  label: 'AMC Requests',
-                  data: [5, 8, 6, 12, 10, 15, 18, 14, 20, 16, 22, stats.amcRequests],
-                  borderColor: '#8b5cf6',
-                  backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                  fill: true,
-                  tension: 0.4
-                },
-                {
-                  label: 'Partner Applications',
-                  data: [1, 2, 1, 3, 2, 4, 3, 5, 4, 6, 5, stats.partners],
-                  borderColor: '#f59e0b',
-                  backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                  fill: true,
-                  tension: 0.4
-                }
-              ]
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: 'top',
-                  labels: {
-                    usePointStyle: true,
-                    padding: 20,
-                    font: {
-                      size: 12,
-                      weight: '500'
-                    }
-                  }
-                },
-                title: {
-                  display: true,
-                  text: 'Monthly System Activity Trends',
-                  font: {
-                    size: 16,
-                    weight: 'bold'
-                  },
-                  padding: {
-                    bottom: 30
-                  }
-                },
-                tooltip: {
-                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                  titleColor: 'white',
-                  bodyColor: 'white',
-                  borderColor: 'rgba(255, 255, 255, 0.1)',
-                  borderWidth: 1,
-                  cornerRadius: 8,
-                  displayColors: true,
-                  intersect: false,
-                  mode: 'index'
-                }
-              },
-              scales: {
-                x: {
-                  grid: {
-                    display: false
-                  },
-                  ticks: {
-                    font: {
-                      size: 11
-                    },
-                    color: '#6b7280'
-                  }
-                },
-                y: {
-                  beginAtZero: true,
-                  grid: {
-                    color: 'rgba(0, 0, 0, 0.05)'
-                  },
-                  ticks: {
-                    font: {
-                      size: 11
-                    },
-                    color: '#6b7280'
-                  }
-                }
-              },
-              interaction: {
-                intersect: false,
-                mode: 'index'
-              },
-              elements: {
-                point: {
-                  radius: 4,
-                  hoverRadius: 6,
-                  borderWidth: 2,
-                  hoverBorderWidth: 3
-                }
-              }
-            }}
-            height={400}
-          />
-        </div>
-        
         {/* Pie Chart */}
         <div style={{ 
-          background: 'white', 
+          background: theme === 'dark' ? 'var(--bg-secondary)' : 'white', 
           padding: '30px', 
           borderRadius: '12px', 
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -335,6 +212,23 @@ const Dashboard = () => {
                     font: {
                       size: 12,
                       weight: '500'
+                    },
+                    generateLabels: function(chart) {
+                      const data = chart.data;
+                      const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                      const textColor = theme === 'dark' ? '#ffffff' : '#333333';
+                      return data.labels.map((label, index) => {
+                        const value = data.datasets[0].data[index];
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return {
+                          text: `${label}: ${value} (${percentage}%)`,
+                          fillStyle: data.datasets[0].backgroundColor[index],
+                          strokeStyle: data.datasets[0].borderColor[index],
+                          lineWidth: 2,
+                          pointStyle: 'circle',
+                          fontColor: textColor
+                        };
+                      });
                     }
                   }
                 },
@@ -347,7 +241,8 @@ const Dashboard = () => {
                   },
                   padding: {
                     bottom: 20
-                  }
+                  },
+                  color: theme === 'dark' ? '#ffffff' : '#333333'
                 },
                 tooltip: {
                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -360,7 +255,7 @@ const Dashboard = () => {
                   callbacks: {
                     label: function(context) {
                       const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                      const percentage = ((context.parsed / total) * 100).toFixed(1);
+                      const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
                       return `${context.label}: ${context.parsed} (${percentage}%)`;
                     }
                   }
